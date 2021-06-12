@@ -18,12 +18,12 @@ func RegisterToEvent(c *gin.Context) {
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
 
-	username, done := ParseBearer(c)
-	if done {
+	email, done := ParseBearer(c)
+	if !done {
 		return
 	}
 
-	user, ok := db.FindUserByEmail(username)
+	user, ok := db.FindUserByEmail(email)
 	if ok {
 		objID, err := primitive.ObjectIDFromHex(jsonInput.EventID)
 		if err != nil {

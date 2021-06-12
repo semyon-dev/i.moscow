@@ -15,7 +15,7 @@ var (
 	client           *mongo.Client
 	usersCollection  *mongo.Collection
 	eventsCollection *mongo.Collection
-	teamsCollection  *mongo.Collection
+	skillsCollection *mongo.Collection
 )
 
 func Connect() {
@@ -37,7 +37,7 @@ func Connect() {
 
 	database := client.Database("main")
 	usersCollection = database.Collection("users")
-	teamsCollection = database.Collection("teams")
+	skillsCollection = database.Collection("skills")
 	eventsCollection = database.Collection("events")
 
 	err = Ping()

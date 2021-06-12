@@ -6,7 +6,7 @@ import (
 
 type User struct {
 	Id       primitive.ObjectID `json:"id" bson:"_id"`
-	Password string             `json:"password" bson:"password" binding:"required"`
+	Password string             `json:"-" bson:"password"`
 
 	FIO      string   `json:"fio" bson:"fio"`
 	PhotoURL string   `json:"photoURL" bson:"photoURL"`
@@ -33,7 +33,7 @@ type User struct {
 		DateEnd   string `json:"dateEnd" bson:"dateEnd"`
 	} `json:"education" bson:"education"`
 
-	RegisteredEvents []primitive.ObjectID `bson:"registeredEvents"`
+	RegisteredEvents []primitive.ObjectID `bson:"registeredEvents" json:"registeredEvents"`
 }
 
 type Event struct {

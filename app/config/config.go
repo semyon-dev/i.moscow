@@ -7,9 +7,10 @@ import (
 )
 
 var (
-	AccessSecret string
-	MongoUrl     string
-	Port         string
+	AccessSecret     string
+	MongoUrl         string
+	Port             string
+	FireBaseFileName string
 )
 
 func Load() {
@@ -20,5 +21,6 @@ func Load() {
 		AccessSecret = os.Getenv("ACCESS_SECRET")
 		MongoUrl = os.Getenv("MONGO_URL")
 		Port = os.Getenv("PORT")
+		FireBaseFileName = os.Getenv("FIREBASE_FILE_NAME")
 	}
 }

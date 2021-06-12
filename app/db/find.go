@@ -6,8 +6,10 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"i-moscow-backend/app/model"
 	"log"
+	"time"
 )
 
 func GetEventByID(id primitive.ObjectID) (event model.Event, isExist bool) {
@@ -47,3 +49,50 @@ func FindUserByEmail(email string) (User model.User, isExist bool) {
 	}
 	return User, true
 }
+
+type reply struct {
+	Name string `json:"Name" bson:"Name"`
+}
+
+func FullTextSearch(text string) (endRep []string) {
+	filter := bson.M{"$text": bson.M{"$search": text}}
+	opts := options.Find().SetLimit(50).SetMaxTime(time.Second * 3)
+	cursor, err := skillsCollection.Find(context.Background(), filter, opts)
+	if err != nil {
+		log.Println(err)
+	}
+	// выделяем память заранее
+	rep := make([]reply, 0, 50)
+	endRep = make([]string, 0, 50)
+	err = cursor.All(context.Background(), &rep)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	for _, v := range rep {
+		if v.Name == "" {
+			continue
+		}
+		endRep = append(endRep, v.Name)
+	}
+	return
+}
+
+//func RegexSearch(text string) (endRep []string) {
+//	filter := bson.M{"positionName": bson.M{"$regex": text, "$options": "i"}}
+//	cursor, err := skillsCollection.Find(context.Background(), filter)
+//	if err != nil {
+//		log.Println(err)
+//	}
+//	rep := make([]reply, 0, 50)
+//	err = cursor.All(context.Background(), &rep)
+//	if err != nil {
+//		log.Fatalln(err)
+//	}
+//	for i, v := range rep {
+//		if i == 50 {
+//			break
+//		}
+//		endRep = append(endRep, v.Name)
+//	}
+//	return
+//}

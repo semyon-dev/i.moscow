@@ -3,10 +3,7 @@ package user
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/zhashkevych/auth/pkg/auth"
-	"github.com/zhashkevych/auth/pkg/parser"
 	"golang.org/x/crypto/bcrypt"
-	"i-moscow-backend/app/config"
 	"i-moscow-backend/app/db"
 	"i-moscow-backend/app/session"
 	"net/http"
@@ -52,33 +49,23 @@ func Auth(c *gin.Context) {
 	})
 }
 
-func ParseBearer(c *gin.Context) (string, bool) {
+func ParseBearer(c *gin.Context) (email string, isValid bool) {
 	authHeader := c.GetHeader("Authorization")
 	if authHeader == "" {
 		c.AbortWithStatus(http.StatusUnauthorized)
-		return "", true
+		return "", false
 	}
 
 	headerParts := strings.Split(authHeader, " ")
 	if len(headerParts) != 2 {
 		c.AbortWithStatus(http.StatusUnauthorized)
-		return "", true
+		return "", false
 	}
 
 	if headerParts[0] != "Bearer" {
 		c.AbortWithStatus(http.StatusUnauthorized)
-		return "", true
+		return "", false
 	}
-
-	username, err := parser.ParseToken(headerParts[1], []byte(config.AccessSecret))
-	if err != nil {
-		status := http.StatusBadRequest
-		if err == auth.ErrInvalidAccessToken {
-			status = http.StatusUnauthorized
-		}
-
-		c.AbortWithStatus(status)
-		return "", true
-	}
-	return username, false
+	email = session.ParseToken(headerParts[1])
+	return email, true
 }

@@ -6,27 +6,40 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"golang.org/x/crypto/bcrypt"
 	"i-moscow-backend/app/model"
+	"log"
 )
 
-func UpdateUser(user model.User) (isExist bool) {
+func UpdateUser(user model.User) (err error) {
 	filter := bson.M{"_id": user.Id}
 
-	update := bson.D{
-		{"$set", bson.D{
-			{"email", user.Email},
-			{"password", user.Password},
-			{"fio", user.FIO},
-		}},
+	if user.Password != "" {
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return err
+		}
+		user.Password = string(hashedPassword)
+	} else {
+		var thisUser model.User
+		result := usersCollection.FindOne(context.Background(), filter)
+		err = result.Decode(&thisUser)
+		if err != nil {
+			log.Println(err)
+			return err
+		}
+		user.Password = thisUser.Password
 	}
 
-	_, err := usersCollection.UpdateOne(context.Background(), update, filter)
-	if err != nil {
+	result := usersCollection.FindOneAndReplace(context.Background(), filter, user)
+	if result.Err() != nil {
+		log.Println(err)
 		if err == mongo.ErrNoDocuments {
-			return false
+			log.Println("no docs")
 		}
+		return
 	}
-	return true
+	return nil
 }
 
 func AddRegisteredEventToUser(email string, eventID primitive.ObjectID) {
