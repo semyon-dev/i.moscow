@@ -25,7 +25,7 @@ func main() {
 	app.POST("/auth", user.Auth)
 	app.POST("/user", user.Register)
 	app.PUT("/user", user.Update)
-	app.GET("/user/me", user.Me)
+	app.GET("/user", user.Me)
 	app.GET("/user/events", user.UserEvents)
 	app.POST("/user/event", user.RegisterToEvent)
 
