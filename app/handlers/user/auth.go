@@ -27,13 +27,14 @@ func Auth(c *gin.Context) {
 	user, exist := db.FindUserByEmail(jsonInput.Email)
 	if !exist {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid credentials",
+			"message": "invalid email",
 		})
 		return
 	}
+
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(jsonInput.Password)) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid credentials",
+			"message": "invalid password",
 		})
 		return
 	}

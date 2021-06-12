@@ -39,7 +39,6 @@ func GetEvents() (events []model.Event) {
 
 func FindUserByEmail(email string) (User model.User, isExist bool) {
 	filter := bson.M{"email": email}
-
 	err := usersCollection.FindOne(context.Background(), filter).Decode(&User)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {

@@ -24,6 +24,13 @@ func Register(c *gin.Context) {
 		return
 	}
 
+	if user.Password == "" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": "password can't be empty",
+		})
+		return
+	}
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
