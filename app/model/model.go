@@ -28,11 +28,11 @@ type User struct {
 	Skills   []string `json:"skills" bson:"skills"`
 
 	WorkExperience []struct {
-		CompanyName      string   `json:"companyName" bson:"companyName"`
-		Position         string   `json:"position" bson:"position"`
-		DateStart        string   `json:"dateStart" bson:"dateStart"`
-		DateEnd          string   `json:"dateEnd" bson:"dateEnd"`
-		Responsibilities []string `json:"responsibilities"  bson:"responsibilities"`
+		CompanyName      string `json:"companyName" bson:"companyName"`
+		Position         string `json:"position" bson:"position"`
+		DateStart        string `json:"dateStart" bson:"dateStart"`
+		DateEnd          string `json:"dateEnd" bson:"dateEnd"`
+		Responsibilities string `json:"responsibilities"  bson:"responsibilities"`
 	} `json:"workExperience" bson:"workExperience"`
 
 	Education []struct {
