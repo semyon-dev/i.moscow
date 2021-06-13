@@ -2,12 +2,21 @@ package model
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
 type User struct {
 	Id          primitive.ObjectID `json:"id" bson:"_id"`
 	Password    string             `json:"password" bson:"password"`
 	DeviceToken string             `json:"deviceToken" bson:"deviceToken"`
+
+	CreatedAt time.Time `json:"createdAt" bson:"createdAt"`
+
+	UserStats struct {
+		Friendly   uint64 `json:"friendly" bson:"friendly"`
+		Leadership uint64 `json:"leadership" bson:"leadership"`
+		Competent  uint64 `json:"competent" bson:"competent"`
+	} `json:"userStats" bson:"userStats"`
 
 	FIO      string   `json:"fio" bson:"fio"`
 	PhotoURL string   `json:"photoURL" bson:"photoURL"`

@@ -9,6 +9,7 @@ import (
 	"i-moscow-backend/app/model"
 	"i-moscow-backend/app/session"
 	"net/http"
+	"time"
 )
 
 func Register(c *gin.Context) {
@@ -41,6 +42,7 @@ func Register(c *gin.Context) {
 
 	user.Id = primitive.NewObjectID()
 	user.Password = string(hashedPassword)
+	user.CreatedAt = time.Now()
 
 	err = db.Insert("users", user)
 	if err != nil {
