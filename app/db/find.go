@@ -105,9 +105,9 @@ type reply struct {
 	Name string `json:"Name" bson:"Name"`
 }
 
-func FullTextSearch(text string) (endRep []string) {
+func FullTextSearch(text string, limit int64) (endRep []string) {
 	filter := bson.M{"$text": bson.M{"$search": text}}
-	opts := options.Find().SetLimit(50).SetMaxTime(time.Second * 3)
+	opts := options.Find().SetLimit(limit).SetMaxTime(time.Second * 3)
 	cursor, err := db.Collection("skills").Find(context.Background(), filter, opts)
 	if err != nil {
 		log.Println(err)

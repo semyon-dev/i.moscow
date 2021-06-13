@@ -14,7 +14,7 @@ func AutoCompletion(c *gin.Context) {
 		})
 		return
 	}
-	reply := db.FullTextSearch(name)
+	reply := db.FullTextSearch(name, 50)
 	c.JSON(http.StatusOK, gin.H{
 		"message":         "ok",
 		"autoCompletions": reply,

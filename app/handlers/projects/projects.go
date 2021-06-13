@@ -7,6 +7,7 @@ import (
 	"i-moscow-backend/app/model"
 	"i-moscow-backend/app/notifications"
 	"i-moscow-backend/app/session"
+	"i-moscow-backend/app/skills"
 	"net/http"
 )
 
@@ -42,6 +43,22 @@ func CreateProject(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "ok"})
+
+	desc := project.Name + " " +
+		project.Description + " " +
+		project.UniqueAdvantage + " " +
+		project.IntellectualProperty + " " +
+		project.Needs + " " +
+		project.MarketApplication + " " +
+		project.MarketCapacityTargetCustomers + " " +
+		project.Competitors + " " +
+		project.ResourcesAndInfrastructure + " " +
+		project.CurrentProjectStatus + " " +
+		project.ImplementationModel + " " +
+		project.DevelopmentPlan
+
+	skillsArray := skills.GenerateSkills(desc)
+	_ = db.UpdateSkillsOfProject(project.Id, skillsArray)
 }
 
 func DeleteProject(c *gin.Context) {

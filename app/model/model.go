@@ -16,7 +16,7 @@ type User struct {
 		Friendly   uint64 `json:"friendly" bson:"friendly"`
 		Leadership uint64 `json:"leadership" bson:"leadership"`
 		Competent  uint64 `json:"competent" bson:"competent"`
-	} `json:"userStats" bson:"userStats"`
+	} `json:"stats" bson:"stats"`
 
 	FIO      string   `json:"fio" bson:"fio"`
 	PhotoURL string   `json:"photoURL" bson:"photoURL"`
