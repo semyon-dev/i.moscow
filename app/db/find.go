@@ -15,7 +15,7 @@ import (
 func GetEventByID(id primitive.ObjectID) (event model.Event, isExist bool) {
 	filter := bson.M{"_id": id}
 
-	err := eventsCollection.FindOne(context.Background(), filter).Decode(&event)
+	err := db.Collection("events").FindOne(context.Background(), filter).Decode(&event)
 	if err != nil {
 		fmt.Println(err)
 		if err == mongo.ErrNoDocuments {
@@ -27,7 +27,7 @@ func GetEventByID(id primitive.ObjectID) (event model.Event, isExist bool) {
 }
 
 func GetEvents() (events []model.Event) {
-	cursor, err := eventsCollection.Find(context.Background(), bson.M{})
+	cursor, err := db.Collection("events").Find(context.Background(), bson.M{})
 	if err != nil {
 		log.Println(err)
 	}
@@ -37,16 +37,64 @@ func GetEvents() (events []model.Event) {
 	return
 }
 
-func FindUserByEmail(email string) (User model.User, isExist bool) {
+func Get(collection string) (items []interface{}) {
+	cursor, err := db.Collection(collection).Find(context.Background(), bson.M{})
+	if err != nil {
+		log.Println(err)
+	}
+	if err = cursor.All(context.Background(), &items); err != nil {
+		log.Println(err)
+	}
+	return
+}
+
+func GetProjects(capitanId string) (projects []model.Project) {
+	filter := bson.M{"teamCapitanID": capitanId}
+	cur, err := db.Collection("events").Find(context.Background(), filter)
+	if err != nil {
+		log.Println(err)
+	}
+	err = cur.All(context.Background(), projects)
+	if err != nil {
+		log.Println(err)
+	}
+	return
+}
+
+func FindUserByEmail(email string) (user model.User, isExist bool) {
 	filter := bson.M{"email": email}
-	err := usersCollection.FindOne(context.Background(), filter).Decode(&User)
+	err := db.Collection("users").FindOne(context.Background(), filter).Decode(&user)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return model.User{}, false
 		}
 		return
 	}
-	return User, true
+	return user, true
+}
+
+func GetProjectById(id string) (project model.Project, isExist bool) {
+	filter := bson.M{"_id": id}
+	err := db.Collection("projects").FindOne(context.Background(), filter).Decode(&project)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return model.Project{}, false
+		}
+		return
+	}
+	return project, true
+}
+
+func FindUserById(id string) (user model.User, isExist bool) {
+	filter := bson.M{"_id": id}
+	err := db.Collection("users").FindOne(context.Background(), filter).Decode(&user)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return model.User{}, false
+		}
+		return
+	}
+	return user, true
 }
 
 type reply struct {
@@ -56,7 +104,7 @@ type reply struct {
 func FullTextSearch(text string) (endRep []string) {
 	filter := bson.M{"$text": bson.M{"$search": text}}
 	opts := options.Find().SetLimit(50).SetMaxTime(time.Second * 3)
-	cursor, err := skillsCollection.Find(context.Background(), filter, opts)
+	cursor, err := db.Collection("skills").Find(context.Background(), filter, opts)
 	if err != nil {
 		log.Println(err)
 	}
@@ -75,23 +123,3 @@ func FullTextSearch(text string) (endRep []string) {
 	}
 	return
 }
-
-//func RegexSearch(text string) (endRep []string) {
-//	filter := bson.M{"positionName": bson.M{"$regex": text, "$options": "i"}}
-//	cursor, err := skillsCollection.Find(context.Background(), filter)
-//	if err != nil {
-//		log.Println(err)
-//	}
-//	rep := make([]reply, 0, 50)
-//	err = cursor.All(context.Background(), &rep)
-//	if err != nil {
-//		log.Fatalln(err)
-//	}
-//	for i, v := range rep {
-//		if i == 50 {
-//			break
-//		}
-//		endRep = append(endRep, v.Name)
-//	}
-//	return
-//}

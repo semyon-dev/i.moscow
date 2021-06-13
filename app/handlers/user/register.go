@@ -42,7 +42,7 @@ func Register(c *gin.Context) {
 	user.Id = primitive.NewObjectID()
 	user.Password = string(hashedPassword)
 
-	err = db.InsertUser(user)
+	err = db.Insert("users", user)
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -51,7 +51,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	userToken, err = session.Create(user.Email)
+	userToken, err = session.Create(user.Email, user.Id.Hex())
 	if err != nil {
 		fmt.Println("Error in generating JWT: " + err.Error())
 	}

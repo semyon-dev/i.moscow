@@ -51,12 +51,14 @@ type Event struct {
 }
 
 type Project struct {
-	Area     string `json:"area" bson:"area"`
-	Name     string `json:"name" bson:"name"`
-	PhotoURL string `json:"photoURL" bson:"photoURL"`
+	Id       primitive.ObjectID `json:"id" bson:"_id"`
+	Area     string             `json:"area" bson:"area"`
+	Name     string             `json:"name" bson:"name"`
+	PhotoURL string             `json:"photoURL" bson:"photoURL"`
 
 	TeamCapitanID primitive.ObjectID   `json:"teamCapitan" bson:"teamCapitan"`
 	TeamIDs       []primitive.ObjectID `json:"teamIDs" bson:"teamIDs"`
+	RequestedIds  []primitive.ObjectID `json:"requestedIds" bson:"requestedIds"`
 
 	Description     string `json:"description" bson:"description"`
 	UniqueAdvantage string `json:"uniqueAdvantage" bson:"uniqueAdvantage"`

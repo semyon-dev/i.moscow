@@ -4,11 +4,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"i-moscow-backend/app/db"
 	"i-moscow-backend/app/model"
+	"i-moscow-backend/app/session"
 	"net/http"
 )
 
 func Update(c *gin.Context) {
-	_, done := ParseBearer(c)
+	_, _, done := session.ParseBearer(c)
 	if !done {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "invalid token",
@@ -41,7 +42,7 @@ func Update(c *gin.Context) {
 }
 
 func GetUser(c *gin.Context) {
-	email, done := ParseBearer(c)
+	_, email, done := session.ParseBearer(c)
 	if !done {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "invalid token",
@@ -59,11 +60,11 @@ func GetUser(c *gin.Context) {
 }
 
 func GetUserEvents(c *gin.Context) {
-	username, done := ParseBearer(c)
+	id, _, done := session.ParseBearer(c)
 	if !done {
 		c.AbortWithStatus(http.StatusInternalServerError)
 	}
-	user, ok := db.FindUserByEmail(username)
+	user, ok := db.FindUserById(id)
 	if ok {
 		c.JSON(http.StatusOK, gin.H{
 			"userEvents": user.RegisteredEvents,

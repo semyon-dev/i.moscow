@@ -7,7 +7,6 @@ import (
 	"i-moscow-backend/app/db"
 	"i-moscow-backend/app/session"
 	"net/http"
-	"strings"
 )
 
 func Auth(c *gin.Context) {
@@ -39,7 +38,7 @@ func Auth(c *gin.Context) {
 		return
 	}
 
-	token, err := session.Create(user.Email)
+	token, err := session.Create(user.Email, user.Id.Hex())
 	if err != nil {
 		fmt.Println("Error in generating JWT: " + err.Error())
 	}
@@ -48,25 +47,4 @@ func Auth(c *gin.Context) {
 		"message": "ok",
 		"token":   token,
 	})
-}
-
-func ParseBearer(c *gin.Context) (email string, isValid bool) {
-	authHeader := c.GetHeader("Authorization")
-	if authHeader == "" {
-		c.AbortWithStatus(http.StatusUnauthorized)
-		return "", false
-	}
-
-	headerParts := strings.Split(authHeader, " ")
-	if len(headerParts) != 2 {
-		c.AbortWithStatus(http.StatusUnauthorized)
-		return "", false
-	}
-
-	if headerParts[0] != "Bearer" {
-		c.AbortWithStatus(http.StatusUnauthorized)
-		return "", false
-	}
-	email = session.ParseToken(headerParts[1])
-	return email, true
 }

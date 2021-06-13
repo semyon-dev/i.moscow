@@ -22,7 +22,7 @@ func UpdateUser(user model.User) (err error) {
 		user.Password = string(hashedPassword)
 	} else {
 		var thisUser model.User
-		result := usersCollection.FindOne(context.Background(), filter)
+		result := db.Collection("users").FindOne(context.Background(), filter)
 		err = result.Decode(&thisUser)
 		if err != nil {
 			log.Println(err)
@@ -31,8 +31,33 @@ func UpdateUser(user model.User) (err error) {
 		user.Password = thisUser.Password
 	}
 
-	result := usersCollection.FindOneAndReplace(context.Background(), filter, user)
+	result := db.Collection("users").FindOneAndReplace(context.Background(), filter, user)
 	if result.Err() != nil {
+		log.Println(err)
+		if err == mongo.ErrNoDocuments {
+			log.Println("no docs")
+		}
+		return
+	}
+	return nil
+}
+
+func UpdateProject(project model.Project) (err error) {
+	filter := bson.M{"_id": project.Id}
+
+	var thisProject model.Project
+	result := db.Collection("projects").FindOne(context.Background(), filter)
+	err = result.Decode(&thisProject)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	project.Id = thisProject.Id
+	project.TeamCapitanID = thisProject.TeamCapitanID
+	project.TeamIDs = thisProject.TeamIDs
+
+	resultReplace := db.Collection("projects").FindOneAndReplace(context.Background(), filter, project)
+	if resultReplace.Err() != nil {
 		log.Println(err)
 		if err == mongo.ErrNoDocuments {
 			log.Println("no docs")
@@ -45,8 +70,18 @@ func UpdateUser(user model.User) (err error) {
 func AddRegisteredEventToUser(email string, eventID primitive.ObjectID) {
 	filter := bson.M{"email": email}
 	update := bson.M{"$push": bson.M{"registeredEvents": eventID}}
-	_, err := usersCollection.UpdateOne(context.Background(), filter, update)
+	_, err := db.Collection("users").UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+func AddMemberToProject(id string, memberId primitive.ObjectID) error {
+	filter := bson.M{"_id": id}
+	update := bson.M{"$push": bson.M{"teamIDs": memberId}}
+	_, err := db.Collection("projects").UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return err
 }

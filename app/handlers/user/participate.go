@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"i-moscow-backend/app/db"
+	"i-moscow-backend/app/session"
 	"net/http"
 )
 
@@ -18,12 +19,12 @@ func RegisterToEvent(c *gin.Context) {
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
 
-	email, done := ParseBearer(c)
+	id, _, done := session.ParseBearer(c)
 	if !done {
 		return
 	}
 
-	user, ok := db.FindUserByEmail(email)
+	user, ok := db.FindUserById(id)
 	if ok {
 		objID, err := primitive.ObjectIDFromHex(jsonInput.EventID)
 		if err != nil {

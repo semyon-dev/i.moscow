@@ -12,10 +12,13 @@ import (
 )
 
 var (
-	client           *mongo.Client
-	usersCollection  *mongo.Collection
-	eventsCollection *mongo.Collection
-	skillsCollection *mongo.Collection
+	client *mongo.Client
+	db     *mongo.Database
+
+	// UsersCollection    *mongo.Collection
+	//EventsCollection   *mongo.Collection
+	//SkillsCollection   *mongo.Collection
+	//ProjectsCollection *mongo.Collection
 )
 
 func Connect() {
@@ -35,10 +38,11 @@ func Connect() {
 		fmt.Println("✔ Подключение client MongoDB успешно")
 	}
 
-	database := client.Database("main")
-	usersCollection = database.Collection("users")
-	skillsCollection = database.Collection("skills")
-	eventsCollection = database.Collection("events")
+	db = client.Database("main")
+	//UsersCollection = database.Collection("users")
+	//SkillsCollection = database.Collection("skills")
+	//EventsCollection = database.Collection("events")
+	//ProjectsCollection = database.Collection("projects")
 
 	err = Ping()
 	if err == nil {
