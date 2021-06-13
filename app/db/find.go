@@ -36,12 +36,17 @@ func GetEvents() (events []model.Event) {
 	return
 }
 
-func GetProjects(collection string) (items []model.Project) {
-	cursor, err := db.Collection(collection).Find(context.Background(), bson.D{})
+func GetProjects(id primitive.ObjectID) (projects []model.Project) {
+	filter := bson.M{"$and": bson.A{
+		bson.M{"teamCapitan": bson.M{"$ne": id}},
+		bson.M{"teamIDs": bson.M{"$nin": bson.A{id}}},
+	}}
+	projects = make([]model.Project, 0, 0)
+	cursor, err := db.Collection("projects").Find(context.Background(), filter)
 	if err != nil {
 		log.Println(err)
 	}
-	if err = cursor.All(context.Background(), &items); err != nil {
+	if err = cursor.All(context.Background(), &projects); err != nil {
 		log.Println(err)
 	}
 	return

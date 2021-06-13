@@ -65,7 +65,9 @@ func DeleteProject(c *gin.Context) {
 }
 
 func GetProjects(c *gin.Context) {
-	projects := db.GetProjects("projects")
+	id, _, _ := session.ParseBearer(c)
+	idObject, _ := primitive.ObjectIDFromHex(id)
+	projects := db.GetProjects(idObject)
 	c.JSON(http.StatusOK, gin.H{"message": "ok", "projects": projects})
 }
 
