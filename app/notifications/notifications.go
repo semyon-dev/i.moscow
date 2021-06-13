@@ -38,8 +38,8 @@ func Send(registrationToken, title, body string) {
 	// registration token.
 	response, err := client.Send(ctx, message)
 	if err != nil {
-		log.Println(err)
+		log.Println("Unsuccessfully sent message:", err)
+		return
 	}
-	// Response is a message ID string.
 	log.Println("Successfully sent message:", response)
 }
