@@ -74,13 +74,15 @@ func GetProjects(c *gin.Context) {
 
 func GetProject(c *gin.Context) {
 	id := c.Param("id")
-	project, _ := db.GetProjectById(id)
+	idO, _ := primitive.ObjectIDFromHex(id)
+	project, _ := db.GetProjectById(idO)
 	c.JSON(http.StatusOK, gin.H{"message": "ok", "project": project})
 }
 
 func GetRequests(c *gin.Context) {
 	id := c.Param("id")
-	project, _ := db.GetProjectById(id)
+	idO, _ := primitive.ObjectIDFromHex(id)
+	project, _ := db.GetProjectById(idO)
 	c.JSON(http.StatusOK, gin.H{"message": "ok", "requestedUsers": project.RequestedIds})
 }
 
@@ -137,7 +139,8 @@ func AddMember(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "ok"})
 	user, _ := db.FindUserById(memberIdObjectId)
-	notifications.Send(user.DeviceToken, "Ура! Теперь вы часть проекта.", "Ваша заявка была одобрена в проект")
+	project, _ := db.GetProjectById(projectIdObjectId)
+	notifications.Send(user.DeviceToken, "Ура! Теперь вы часть проекта.", "Ваша заявка была одобрена в проект \n"+project.Name)
 }
 
 func DeleteMember(c *gin.Context) {

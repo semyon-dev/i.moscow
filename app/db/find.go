@@ -77,7 +77,7 @@ func FindUserByEmail(email string) (user model.User, isExist bool) {
 	return user, true
 }
 
-func GetProjectById(id string) (project model.Project, isExist bool) {
+func GetProjectById(id primitive.ObjectID) (project model.Project, isExist bool) {
 	filter := bson.M{"_id": id}
 	err := db.Collection("projects").FindOne(context.Background(), filter).Decode(&project)
 	if err != nil {

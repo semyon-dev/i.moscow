@@ -11,12 +11,12 @@ import (
 
 var App *firebase.App
 
-func init() {
+func Init() {
 	var err error
 	opt := option.WithCredentialsFile(config.FireBaseFileName)
 	App, err = firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
-		log.Fatalf("error initializing app: %v\n", err)
+		log.Printf("error initializing app: %v\n", err)
 	}
 }
 

@@ -10,12 +10,15 @@ import (
 	"i-moscow-backend/app/handlers/projects"
 	"i-moscow-backend/app/handlers/user"
 	"i-moscow-backend/app/handlers/util"
+	"i-moscow-backend/app/notifications"
 )
 
 func main() {
 
 	config.Load()
 	db.Connect()
+
+	notifications.Init()
 
 	app := gin.Default()
 	app.Use(cors.Default())
