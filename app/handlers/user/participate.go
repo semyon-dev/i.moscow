@@ -24,7 +24,8 @@ func RegisterToEvent(c *gin.Context) {
 		return
 	}
 
-	user, ok := db.FindUserById(id)
+	objectId, _ := primitive.ObjectIDFromHex(id)
+	user, ok := db.FindUserById(objectId)
 	if ok {
 		objID, err := primitive.ObjectIDFromHex(jsonInput.EventID)
 		if err != nil {

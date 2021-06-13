@@ -14,7 +14,6 @@ import (
 
 func GetEventByID(id primitive.ObjectID) (event model.Event, isExist bool) {
 	filter := bson.M{"_id": id}
-
 	err := db.Collection("events").FindOne(context.Background(), filter).Decode(&event)
 	if err != nil {
 		fmt.Println(err)
@@ -37,8 +36,8 @@ func GetEvents() (events []model.Event) {
 	return
 }
 
-func Get(collection string) (items []interface{}) {
-	cursor, err := db.Collection(collection).Find(context.Background(), bson.M{})
+func GetProjects(collection string) (items []model.Project) {
+	cursor, err := db.Collection(collection).Find(context.Background(), bson.D{})
 	if err != nil {
 		log.Println(err)
 	}
@@ -48,14 +47,14 @@ func Get(collection string) (items []interface{}) {
 	return
 }
 
-func GetProjects(capitanId string) (projects []model.Project) {
-	filter := bson.M{"teamCapitanID": capitanId}
-	cur, err := db.Collection("events").Find(context.Background(), filter)
+func GetMyProjects(capitanId string) (projects []model.Project) {
+	id, _ := primitive.ObjectIDFromHex(capitanId)
+	filter := bson.M{"teamCapitan": id}
+	cursor, err := db.Collection("projects").Find(context.Background(), filter)
 	if err != nil {
 		log.Println(err)
 	}
-	err = cur.All(context.Background(), projects)
-	if err != nil {
+	if err = cursor.All(context.Background(), &projects); err != nil {
 		log.Println(err)
 	}
 	return
@@ -85,7 +84,7 @@ func GetProjectById(id string) (project model.Project, isExist bool) {
 	return project, true
 }
 
-func FindUserById(id string) (user model.User, isExist bool) {
+func FindUserById(id primitive.ObjectID) (user model.User, isExist bool) {
 	filter := bson.M{"_id": id}
 	err := db.Collection("users").FindOne(context.Background(), filter).Decode(&user)
 	if err != nil {

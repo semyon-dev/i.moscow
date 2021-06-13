@@ -53,7 +53,7 @@ func UpdateProject(project model.Project) (err error) {
 		return err
 	}
 	project.Id = thisProject.Id
-	project.TeamCapitanID = thisProject.TeamCapitanID
+	project.TeamCapitan = thisProject.TeamCapitan
 	project.TeamIDs = thisProject.TeamIDs
 
 	resultReplace := db.Collection("projects").FindOneAndReplace(context.Background(), filter, project)
@@ -76,9 +76,39 @@ func AddRegisteredEventToUser(email string, eventID primitive.ObjectID) {
 	}
 }
 
-func AddMemberToProject(id string, memberId primitive.ObjectID) error {
+func AddMemberToProject(id, userId primitive.ObjectID) error {
 	filter := bson.M{"_id": id}
-	update := bson.M{"$push": bson.M{"teamIDs": memberId}}
+	update := bson.M{"$push": bson.M{"teamIDs": userId}}
+	_, err := db.Collection("projects").UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return err
+}
+
+func DeleteMemberFromProject(id, memberId primitive.ObjectID) error {
+	filter := bson.M{"_id": id}
+	update := bson.M{"$pull": bson.M{"teamIDs": memberId}}
+	_, err := db.Collection("projects").UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return err
+}
+
+func DeleteRequestFromProject(projectId, userId primitive.ObjectID) error {
+	filter := bson.M{"_id": projectId}
+	update := bson.M{"$pull": bson.M{"requestedIds": userId}}
+	_, err := db.Collection("projects").UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return err
+}
+
+func AddRequestMemberToProject(projectId, memberId primitive.ObjectID) error {
+	filter := bson.M{"_id": projectId}
+	update := bson.M{"$push": bson.M{"requestedIds": memberId}}
 	_, err := db.Collection("projects").UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		fmt.Println(err)

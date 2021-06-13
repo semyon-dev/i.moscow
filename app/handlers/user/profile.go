@@ -2,6 +2,7 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"i-moscow-backend/app/db"
 	"i-moscow-backend/app/model"
 	"i-moscow-backend/app/session"
@@ -59,12 +60,26 @@ func GetUser(c *gin.Context) {
 	c.AbortWithStatus(http.StatusInternalServerError)
 }
 
+func GetUserById(c *gin.Context) {
+	id := c.Param("id")
+	objectId, _ := primitive.ObjectIDFromHex(id)
+	user, ok := db.FindUserById(objectId)
+	if ok {
+		c.JSON(http.StatusOK, gin.H{
+			"user": user,
+		})
+		return
+	}
+	c.AbortWithStatus(http.StatusBadRequest)
+}
+
 func GetUserEvents(c *gin.Context) {
 	id, _, done := session.ParseBearer(c)
 	if !done {
 		c.AbortWithStatus(http.StatusInternalServerError)
 	}
-	user, ok := db.FindUserById(id)
+	objectId, _ := primitive.ObjectIDFromHex(id)
+	user, ok := db.FindUserById(objectId)
 	if ok {
 		c.JSON(http.StatusOK, gin.H{
 			"userEvents": user.RegisteredEvents,

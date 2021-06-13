@@ -56,9 +56,11 @@ type Project struct {
 	Name     string             `json:"name" bson:"name"`
 	PhotoURL string             `json:"photoURL" bson:"photoURL"`
 
-	TeamCapitanID primitive.ObjectID   `json:"teamCapitan" bson:"teamCapitan"`
-	TeamIDs       []primitive.ObjectID `json:"teamIDs" bson:"teamIDs"`
-	RequestedIds  []primitive.ObjectID `json:"requestedIds" bson:"requestedIds"`
+	Skills []string `json:"skills" bson:"skills"`
+
+	TeamCapitan  primitive.ObjectID   `json:"teamCapitan" bson:"teamCapitan"`
+	TeamIDs      []primitive.ObjectID `json:"teamIDs" bson:"teamIDs"`
+	RequestedIds []primitive.ObjectID `json:"requestedIds" bson:"requestedIds"`
 
 	Description     string `json:"description" bson:"description"`
 	UniqueAdvantage string `json:"uniqueAdvantage" bson:"uniqueAdvantage"`

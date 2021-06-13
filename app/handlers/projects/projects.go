@@ -20,6 +20,9 @@ func CreateProject(c *gin.Context) {
 	}
 
 	var project model.Project
+	project.TeamIDs = make([]primitive.ObjectID, 0, 0)
+	project.Skills = make([]string, 0, 0)
+	project.RequestedIds = make([]primitive.ObjectID, 0, 0)
 	if err := c.ShouldBindJSON(&project); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "not all parameters are specified",
@@ -27,7 +30,8 @@ func CreateProject(c *gin.Context) {
 		return
 	}
 
-	project.TeamCapitanID, _ = primitive.ObjectIDFromHex(id)
+	project.TeamCapitan, _ = primitive.ObjectIDFromHex(id)
+	project.Id = primitive.NewObjectID()
 	err := db.Insert("projects", project)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -61,7 +65,7 @@ func DeleteProject(c *gin.Context) {
 }
 
 func GetProjects(c *gin.Context) {
-	projects := db.Get("projects")
+	projects := db.GetProjects("projects")
 	c.JSON(http.StatusOK, gin.H{"message": "ok", "projects": projects})
 }
 
@@ -77,29 +81,93 @@ func GetRequests(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "ok", "requestedUsers": project.RequestedIds})
 }
 
-func GetMyProjects(c *gin.Context) {
-	id, _, done := session.ParseBearer(c)
+func AddRequest(c *gin.Context) {
+	userId, _, done := session.ParseBearer(c)
 	if !done {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "invalid token",
 		})
 		return
 	}
-	projects := db.GetProjects(id)
+	projectId := c.Param("id")
+	userIdObjectId, _ := primitive.ObjectIDFromHex(userId)
+	projectIdObectId, _ := primitive.ObjectIDFromHex(projectId)
+	err := db.AddRequestMemberToProject(projectIdObectId, userIdObjectId)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"message": "internal server error or invalid project",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "ok"})
+}
+
+func GetMyProjects(c *gin.Context) {
+	id, _, done := session.ParseBearer(c)
+	if !done {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": "invalid token",
+		})
+		return
+	}
+	projects := db.GetMyProjects(id)
 	c.JSON(http.StatusOK, gin.H{"message": "ok", "projects": projects})
 }
 
 func AddMember(c *gin.Context) {
 	projectId := c.Param("id")
-	id, _, done := session.ParseBearer(c)
-	if !done {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"message": "invalid token",
+	memberId := c.Param("memberId")
+	memberIdObjectId, err1 := primitive.ObjectIDFromHex(memberId)
+	projectIdObjectId, err2 := primitive.ObjectIDFromHex(projectId)
+	if err1 != nil || err2 != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": "bad memberId or projectId",
 		})
 		return
 	}
-	idMember, _ := primitive.ObjectIDFromHex(id)
-	err := db.AddMemberToProject(projectId, idMember)
+	err := db.AddMemberToProject(projectIdObjectId, memberIdObjectId)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"message": "internal server error or invalid project",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "ok"})
+}
+
+func DeleteMember(c *gin.Context) {
+	projectId := c.Param("id")
+	memberId := c.Param("memberId")
+	memberIdObjectId, err1 := primitive.ObjectIDFromHex(memberId)
+	projectIdObjectId, err2 := primitive.ObjectIDFromHex(projectId)
+	if err1 != nil || err2 != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": "bad memberId or projectId",
+		})
+		return
+	}
+	err := db.DeleteMemberFromProject(projectIdObjectId, memberIdObjectId)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"message": "internal server error or invalid project",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "ok"})
+}
+
+func DeleteRequestMember(c *gin.Context) {
+	projectId := c.Param("id")
+	userId := c.Param("userId")
+	userIdIdObjectId, err1 := primitive.ObjectIDFromHex(userId)
+	projectIdObjectId, err2 := primitive.ObjectIDFromHex(projectId)
+	if err1 != nil || err2 != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": "bad userId or projectId",
+		})
+		return
+	}
+	err := db.DeleteRequestFromProject(projectIdObjectId, userIdIdObjectId)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"message": "internal server error or invalid project",
