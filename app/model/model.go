@@ -5,8 +5,9 @@ import (
 )
 
 type User struct {
-	Id       primitive.ObjectID `json:"id" bson:"_id"`
-	Password string             `json:"password" bson:"password"`
+	Id          primitive.ObjectID `json:"id" bson:"_id"`
+	Password    string             `json:"password" bson:"password"`
+	DeviceToken string             `json:"deviceToken" bson:"deviceToken"`
 
 	FIO      string   `json:"fio" bson:"fio"`
 	PhotoURL string   `json:"photoURL" bson:"photoURL"`

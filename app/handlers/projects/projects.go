@@ -5,6 +5,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"i-moscow-backend/app/db"
 	"i-moscow-backend/app/model"
+	"i-moscow-backend/app/notifications"
 	"i-moscow-backend/app/session"
 	"net/http"
 )
@@ -135,6 +136,8 @@ func AddMember(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "ok"})
+	user, _ := db.FindUserById(memberIdObjectId)
+	notifications.Send(user.DeviceToken, "Ура! Теперь вы часть проекта.", "Ваша заявка была одобрена в проект")
 }
 
 func DeleteMember(c *gin.Context) {

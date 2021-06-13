@@ -42,6 +42,16 @@ func UpdateUser(user model.User) (err error) {
 	return nil
 }
 
+func UpdateDeviceToken(userId primitive.ObjectID, token string) error {
+	filter := bson.M{"_id": userId}
+	update := bson.M{"$set": bson.M{"deviceToken": token}}
+	_, err := db.Collection("users").UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		log.Println(err)
+	}
+	return err
+}
+
 func UpdateProject(project model.Project) (err error) {
 	filter := bson.M{"_id": project.Id}
 

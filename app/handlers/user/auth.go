@@ -6,14 +6,16 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"i-moscow-backend/app/db"
 	"i-moscow-backend/app/session"
+	"log"
 	"net/http"
 )
 
 func Auth(c *gin.Context) {
 
 	jsonInput := struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
+		Email       string `json:"email"`
+		Password    string `json:"password"`
+		DeviceToken string `json:"deviceToken"`
 	}{}
 
 	if err := c.ShouldBindJSON(&jsonInput); err != nil {
@@ -36,6 +38,11 @@ func Auth(c *gin.Context) {
 			"message": "invalid password",
 		})
 		return
+	}
+
+	err := db.UpdateDeviceToken(user.Id, jsonInput.DeviceToken)
+	if err != nil {
+		log.Println("can't update token: ", err)
 	}
 
 	token, err := session.Create(user.Email, user.Id.Hex())

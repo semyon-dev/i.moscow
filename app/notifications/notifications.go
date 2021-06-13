@@ -4,7 +4,6 @@ import (
 	"context"
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/messaging"
-	"fmt"
 	"google.golang.org/api/option"
 	"i-moscow-backend/app/config"
 	"log"
@@ -27,7 +26,6 @@ func Send(registrationToken, title, body string) {
 	if err != nil {
 		log.Printf("error getting Messaging client: %v\n\n", err)
 	}
-
 	// See documentation on defining a message payload.
 	message := &messaging.Message{
 		Notification: &messaging.Notification{
@@ -36,7 +34,6 @@ func Send(registrationToken, title, body string) {
 		},
 		Token: registrationToken,
 	}
-
 	// Send a message to the device corresponding to the provided
 	// registration token.
 	response, err := client.Send(ctx, message)
@@ -44,5 +41,5 @@ func Send(registrationToken, title, body string) {
 		log.Println(err)
 	}
 	// Response is a message ID string.
-	fmt.Println("Successfully sent message:", response)
+	log.Println("Successfully sent message:", response)
 }
