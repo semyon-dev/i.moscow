@@ -43,7 +43,9 @@ func Register(c *gin.Context) {
 	user.Id = primitive.NewObjectID()
 	user.Password = string(hashedPassword)
 	user.CreatedAt = time.Now()
-
+	if user.PhotoURL == "" {
+		user.PhotoURL = "https://cdn.onlinewebfonts.com/svg/img_341152.png"
+	}
 	err = db.Insert("users", user)
 	if err != nil {
 		fmt.Println(err)

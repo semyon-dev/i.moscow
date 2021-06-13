@@ -34,6 +34,9 @@ func CreateProject(c *gin.Context) {
 
 	project.TeamCapitan, _ = primitive.ObjectIDFromHex(id)
 	project.Id = primitive.NewObjectID()
+	if project.PhotoURL == "" {
+		project.PhotoURL = "https://cdn.onlinewebfonts.com/svg/img_341152.png"
+	}
 	err := db.Insert("projects", project)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
