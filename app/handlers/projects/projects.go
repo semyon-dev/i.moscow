@@ -157,6 +157,7 @@ func AddMember(c *gin.Context) {
 		})
 		return
 	}
+	_ = db.DeleteRequestFromProject(projectIdObjectId, memberIdObjectId)
 	c.JSON(http.StatusOK, gin.H{"message": "ok"})
 	user, _ := db.FindUserById(memberIdObjectId)
 	project, _ := db.GetProjectById(projectIdObjectId)
