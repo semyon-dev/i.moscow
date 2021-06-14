@@ -37,6 +37,9 @@ func main() {
 	app.GET("/user", user.GetUser)
 	app.GET("/user/:id", user.GetUserById)
 
+	// increase stat of user
+	app.POST("/user/:id/stats/:statName", user.IncreaseStat)
+
 	// events
 	app.GET("/events", events.GetEvents)
 	app.GET("/event/:id", events.GetEvent)

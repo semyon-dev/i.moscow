@@ -62,6 +62,16 @@ func UpdateSkillsOfProject(projectId primitive.ObjectID, skills []string) error 
 	return err
 }
 
+func IncreaseStat(userId primitive.ObjectID, statName string) error {
+	filter := bson.M{"_id": userId}
+	update := bson.M{"$inc": bson.M{"stats." + statName: 1}}
+	_, err := db.Collection("users").UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		log.Println(err)
+	}
+	return err
+}
+
 func UpdateProject(project model.Project) (err error) {
 	filter := bson.M{"_id": project.Id}
 
