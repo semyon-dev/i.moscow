@@ -5,11 +5,17 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"i-moscow-backend/app/db"
 	"net/http"
+	"sort"
+	"time"
 )
 
 func GetEvents(c *gin.Context) {
 
 	events := db.GetEvents()
+
+	sort.Slice(events, func(i, j int) bool {
+		return time.Unix(events[i].Date, 0).Unix() < time.Unix(events[j].Date, 0).Unix()
+	})
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "ok",

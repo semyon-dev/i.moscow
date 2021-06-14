@@ -54,7 +54,10 @@ func GetProjects(id primitive.ObjectID) (projects []model.Project) {
 
 func GetMyProjects(capitanId string) (projects []model.Project) {
 	id, _ := primitive.ObjectIDFromHex(capitanId)
-	filter := bson.M{"teamCapitan": id}
+	filter := bson.M{"$or": bson.A{
+		bson.M{"teamCapitan": id},
+		bson.M{"teamIDs": bson.M{"$in": bson.A{id}}},
+	}}
 	cursor, err := db.Collection("projects").Find(context.Background(), filter)
 	if err != nil {
 		log.Println(err)

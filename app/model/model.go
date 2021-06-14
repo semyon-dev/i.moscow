@@ -52,7 +52,7 @@ type Event struct {
 	Name            string             `json:"name" bson:"name"`
 	Description     string             `json:"description" bson:"description"`
 	Type            string             `json:"type" bson:"type"`
-	Date            string             `json:"date" bson:"date"`
+	Date            int64              `json:"date" bson:"date"`
 	Time            string             `json:"time" bson:"time"`
 	FullDescription string             `json:"fullDescription" bson:"fullDescription"`
 	Location        string             `json:"location" bson:"location"`
