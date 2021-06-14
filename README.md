@@ -9,6 +9,8 @@ Backend-проект нашей команды 2 трека (origin dev) с ха
 * Firebase
 * MongoDB
 
+![](https://github.com/semyon-dev/hackuniversity/blob/master/stack.png)
+
 ## Команда
 
 * Семен [semyon_dev](https://github.com/semyon-dev) Новиков (Backend, Project Manager, капитан)
