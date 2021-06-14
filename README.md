@@ -9,7 +9,7 @@ Backend-проект нашей команды 2 трека (origin dev) с ха
 * Firebase
 * MongoDB
 
-![](https://github.com/semyon-dev/hackuniversity/blob/master/stack.png)
+![](https://github.com/semyon-dev/i.moscow/blob/master/stack.png)
 
 ## Команда
 
