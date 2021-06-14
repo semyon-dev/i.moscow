@@ -13,7 +13,7 @@ Backend-проект нашей команды 2 трека с хакатона 
 
 ![](https://github.com/semyon-dev/i.moscow/blob/master/stack.png)
 
-Мобильное приложение можно найти [здесь](https://github.com/Dronicho/moscow_hack) 
+Исходный код мобильного приложения можно найти [здесь](https://github.com/Dronicho/moscow_hack) 
 
 ## Пример .env файла
 
