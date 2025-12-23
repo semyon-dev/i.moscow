@@ -1,13 +1,10 @@
 # i-moscow-backend
 
-Backend-проект нашей команды (origin dev) 2 трека с хакатона [Moscow City Hack](https://moscityhack.innoagency.ru/#main)
+The backend project of our team (Origin Dev), 2nd track of the hackathon [Moscow City Hack](https://moscityhack.innoagency.ru/#main)
 
-Серверная часть представляет из себя REST API для взаимодействия с приложением. В качестве языка был выбран Go так как с
-помощью него можно писать современные и легко масштабируемые серверные приложения. По тем же причинам была выбрана база
-данных MongoDB. hh_skills.csv мы перенесли в mongodb для удобной работы. Для составления компетенций у проектов мы
-использовали полнотекстовый поиск (fullTextSearch), а также добавили индексы для быстрой работы запросов.
+The server side is implemented as a REST API for interacting with the application. Go was chosen as the programming language because it allows building modern, easily scalable backend services. For the same reasons, MongoDB was selected as the database. The hh_skills.csv file was imported into MongoDB for more convenient data handling. To build project competency profiles, we used full-text search (fullTextSearch) and also added indexes to ensure fast query performance.
 
-## Стек
+## Tech
 
 * Go 1.16+
 * JWT
@@ -16,9 +13,9 @@ Backend-проект нашей команды (origin dev) 2 трека с ха
 
 ![](https://github.com/semyon-dev/i.moscow/blob/master/stack.png)
 
-Исходный код мобильного приложения можно найти [здесь](https://github.com/Dronicho/moscow_hack)
+The source code of the mobile application can be found [here](https://github.com/Dronicho/moscow_hack)
 
-## Пример .env файла
+## .env example
 
 ```
 ACCESS_SECRET=secret
@@ -27,14 +24,14 @@ PORT=8080
 FIREBASE_FILE_NAME="i-moscow-firebase-adminsdk.json"
 ```
 
-Так же для работы с уведомлениями в корне проекта должен лежать firebase admin sdk
+Additionally, to work with notifications, the Firebase Admin SDK must be located in the root of the project.
 
-## Запуск проекта
+## Run project
 
 `go run app/main.go`
 
-## Команда origin dev
+## Team origin dev
 
-* Семен Новиков [semyon_dev](https://github.com/semyon-dev) (Project Manager & Backend)
-* Валерий Алюшин [alyush1n](https://github.com/alyush1n)  (Design)
-* Андрей Небогатиков [Dronicho](https://github.com/Dronicho)  (Mobile)
+* Semyon Novikov [semyon_dev](https://github.com/semyon-dev) (Project Manager & Backend)
+* Valeriy Alyushin [alyush1n](https://github.com/alyush1n)  (Design)
+* Andrey Nebogatikov [Dronicho](https://github.com/Dronicho)  (Mobile)
