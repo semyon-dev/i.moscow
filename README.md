@@ -1,6 +1,6 @@
 # i-moscow-backend
 
-The backend project of our team (Origin Dev), 2nd track of the hackathon [Moscow City Hack](https://moscityhack.innoagency.ru/#main)
+The backend project of our team (Origin Dev), 2nd track of the hackathon Moscow City Hack 2021.
 
 The server side is implemented as a REST API for interacting with the application. Go was chosen as the programming language because it allows building modern, easily scalable backend services. For the same reasons, MongoDB was selected as the database. The hh_skills.csv file was imported into MongoDB for more convenient data handling. To build project competency profiles, we used full-text search (fullTextSearch) and also added indexes to ensure fast query performance.
 
