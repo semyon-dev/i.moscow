@@ -13,8 +13,6 @@ The server side is implemented as a REST API for interacting with the applicatio
 
 ![](https://github.com/semyon-dev/i.moscow/blob/master/stack.png)
 
-The source code of the mobile application can be found [here](https://github.com/Dronicho/moscow_hack)
-
 ## .env example
 
 ```
